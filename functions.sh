@@ -58,7 +58,7 @@ setup_pipx() {
   pipx install mypy --include-deps
   pipx install ruff --include-deps
   pipx install isort --include-deps
-
+  pipx install pyright --include-deps
   echo 'export PATH=$PATH:$HOME/.local/bin' >> ~/.zshrc
 
   [ $? -eq 0 ] && echo "pipx setup complete." || { echo "pipx setup failed."; exit 1; }
@@ -68,7 +68,7 @@ setup_vim() {
   # Copy / paste the rc file
   local script_dir=$(dirname "$0")
   local vimrc_path="${HOME}/.vimrc"
-  local repo_vimrc="${script_dir}/vimrc" 
+  local repo_vimrc="${script_dir}/vimrc"
   echo "Setting up Vim..."
   [ -f "$vimrc_path" ] && mv "$vimrc_path" "${vimrc_path}.bak"
   if [ -f "$repo_vimrc" ]; then
@@ -172,4 +172,3 @@ final_steps() {
   # Used to add finals steps in the end if needed..
   chsh -s "$(which zsh)"
 }
-

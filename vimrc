@@ -8,42 +8,40 @@
 "                 ╚═══╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝
 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let mapleader = "\<Space>"
-set number relativenumber
-set nu rnu
-set nowrap
+"" Leader key
+let mapleader = "\<Space>"    " Set <Space> as leader key
 
-" Options:
-set nocompatible
-filetype on
-filetype plugin on
-filetype indent on
-syntax on
-set encoding=utf8
-set clipboard=unnamed " Enables the clipboard between Vim/Neovim and other applications.
-set completeopt=noinsert,menuone,noselect " Modifies the auto-complete menu to behave more like an IDE.
-set hidden " Hide unused buffers
-set mouse=a " Allow to use the mouse in the editor
-set title " Show file title
-set wildmenu " Show a more advance menu
-set cc=120 " Show at 80 column a border for good code style
-set backspace=indent,eol,start " Remove backspace restrictions in insert mode
-set showmatch
-set timeoutlen=100
+"" Numbering and Wrapping
+set number                   " Show absolute line numbers
+set relativenumber           " Show relative line numbers
 
-" indenting:
-set autoindent
-set smartindent
-set expandtab
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
+"" General Options
+set nocompatible             " Disable Vi compatibility
+set encoding=utf8            " Use UTF-8 encoding
+set clipboard=unnamed        " Use the * register for the default yank/paste
+set mouse=a                  " Enable mouse support in all modes
+set title                    " Set the window title to reflect the file name
+set nowrap                   " Don't wrap long lines
+set wildmenu                 " Visual autocomplete for command menu
+set cc=120                   " Highlight column 120 (useful for code formatting)
+set backspace=indent,eol,start " Make backspace key more powerful
+set scrolloff=5              " Minimum number of screen lines to keep above and below the cursor
+set sidescrolloff=5          " Minimum number of screen columns to keep to the left and right of the cursor
 
-" Orientation:
-nnoremap <PageUp> <C-u>
-nnoremap <PageDown> <C-d>
-nnoremap <S-Up> 10k
-nnoremap <S-Down> 10j
+"" Indentation Options
+set autoindent               " Carry the indentation from the previous line
+set smartindent              " Automatically inserts indentation in some cases
+set expandtab                " Use spaces instead of tabs
+set tabstop=4                " A tab is 4 spaces
+set shiftwidth=4             " Number of spaces for indentation
+set softtabstop=4            " Make tab key indents act like 4 spaces
+
+"" Interface Enhancements
+set showmatch                " Highlight matching braces
+set completeopt=menuone,noinsert,noselect " Better completion experience
+set hidden                   " Hide buffers instead of closing them
+set timeoutlen=100           " Time in milliseconds to wait for key sequence completion
+
 
 
 """"""""""""""""""""
@@ -66,41 +64,49 @@ Plug 'dense-analysis/ale'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'jaxbot/semantic-highlight.vim'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'itchyny/lightline.vim'
-Plug 'catppuccin/vim', { 'as': 'catppuccin' }
+Plug 'morhetz/gruvbox'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
 Plug 'liuchengxu/vim-which-key'
+Plug 'preservim/vim-indent-guides'
 call plug#end()
 
-
 """"""""""""""""""""
-" Theme related
+" GUI settings
 """"""""""""""""""""
 set termguicolors
-set noshowmode
 let g:lightline = {'colorscheme': 'catppuccin_frappe'}
+set noshowmode
 set laststatus=2
+colorscheme gruvbox
+set background=dark
+let g:lightline = {
+      \ 'colorscheme': 'gruvbox',
+      \ }
 
-" colors
-highlight PmenuSel guibg=darkgray guifg=black
-highlight Pmenu guibg=gray  guifg=white
-
+highlight PmenuSel guibg=#5C4033 guifg=#F5E0DC
+highlight Pmenu guibg=#6E4B3A guifg=#F5E0DC
+highlight Normal guibg=#3E2C29 guifg=#F5E0DC
 
 """"""""""""""""""""
 " Key mappings
 """"""""""""""""""""
+
+" Orientation
+nnoremap <PageUp> <C-u>
+nnoremap <PageDown> <C-d>
+nnoremap <S-Up> {
+nnoremap <S-Down> }
+
 " Toggle Markdown Preview
 nmap <Leader>m <Plug>MarkdownPreviewToggle
-
-" Toggle Semantic Highlight
-nmap <Leader>s :SemanticHighlightToggle<CR>
 
 " DIAGNOSTICS mappings
 nmap <Leader>d<Up> <Plug>(ale_previous_wrap)
@@ -113,6 +119,19 @@ nmap <Leader>n<Right> :tabnext<CR>
 nmap <Leader>n<Up> :NERDTreeToggle<CR>
 nmap <Leader>n<Down> <C-w>w
 
+" asyncomplete tab completion
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
+
+" Gitgutter
+nnoremap <silent> <Space>Gs :GitGutterStageHunk<CR>
+nnoremap <silent> <Space>Gr :GitGutterRevertHunk<CR>
+nnoremap <silent> <Space>Gn :GitGutterNextHunk<CR>
+nnoremap <silent> <Space>Gp :GitGutterPrevHunk<CR>
+nnoremap <silent> <Space>Gu :GitGutterUndoHunk<CR>
+nnoremap <silent> <Space>Gq :GitGutterQuickFix<CR>
+
 """"""""""""""""""""
 " Vim-which-key
 """"""""""""""""""""
@@ -123,8 +142,6 @@ let g:which_key_map = {}
 let g:which_key_timeout = 100
 
 let g:which_key_map['m'] = [ '<Plug>MarkdownPreviewToggle',  'Toggle MD preview' ]
-let g:which_key_map['s'] = [ ':SemanticHighlightToggle', 'Toggle semantic highlight' ]
-
 
 let g:which_key_map.g = {
             \ 'name' : '+GOTO' ,
@@ -146,6 +163,16 @@ let g:which_key_map.n = {
             \ '<Up>' : [ ':NERDTreeToggle', 'Toggle tree' ],
             \ '<Down>' : [ '<C-w>w', 'Switch tree/tab' ],
             \}
+
+let g:which_key_map.G = {
+    \ 'name' : '+git-gutter',
+    \ 's' : ['<cmd>GitGutterStageHunk<CR>', 'Stage Hunk'],
+    \ 'r' : ['<cmd>GitGutterRevertHunk<CR>', 'Revert Hunk'],
+    \ 'n' : ['<cmd>GitGutterNextHunk<CR>', 'Next Hunk'],
+    \ 'p' : ['<cmd>GitGutterPrevHunk<CR>', 'Previous Hunk'],
+    \ 'u' : ['<cmd>GitGutterUndoHunk<CR>', 'Undo Hunk'],
+    \ 'q' : ['<cmd>GitGutterQuickFix<CR>', 'Quick Fix'],
+    \ }
 
 
 """"""""""""""""""""
@@ -173,11 +200,18 @@ let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 """"""""""""""""""""
 " vim-lsp Setup
 """"""""""""""""""""
-if executable('ruff-langserver')
-    autocmd User lsp_setup call lsp#register_server({
-        \ 'name': 'ruff',
-        \ 'cmd': ['ruff-langserver', '--stdio'],
+if executable('pyright-langserver')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'pyright-langserver',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'pyright-langserver --stdio']},
         \ 'allowlist': ['python'],
+        \ 'workspace_config': {
+        \   'python': {
+        \     'analysis': {
+        \       'useLibraryCodeForTypes': v:true
+        \      },
+        \   },
+        \ }
         \ })
 endif
 
@@ -217,35 +251,14 @@ augroup lsp_install
     autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
 augroup END
 
-let g:lsp_diagnostics_enabled = 0 " This disables vim-lsp diagnostics.
-
-
 """"""""""""""""""""
-" vim-vsnip Setup
+" Assorted plugin options
 """"""""""""""""""""
-" Expand
-imap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
-smap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
+let g:indent_guides_enable_on_vim_startup = 1
+let g:lsp_diagnostics_enabled = 0
 
-" Expand or jump
-imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
-smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
-
-" Jump forward or backward
-imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-
-" Select or cut text to use as $TM_SELECTED_TEXT in the next snippet.
-" See https://github.com/hrsh7th/vim-vsnip/pull/50
-nmap        s   <Plug>(vsnip-select-text)
-xmap        s   <Plug>(vsnip-select-text)
-nmap        S   <Plug>(vsnip-cut-text)
-xmap        S   <Plug>(vsnip-cut-text)
-
-
-""""""""""""""""""""
-" Semantic Highligh
-""""""""""""""""""""
-autocmd BufEnter * :SemanticHighlight
+" Automatically refresh git-gutter after exiting insert mode
+augroup gitgutter_refresh
+  autocmd!
+  autocmd InsertLeave * GitGutter
+augroup END
