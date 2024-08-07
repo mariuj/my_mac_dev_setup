@@ -135,8 +135,6 @@ setup_jupyter() {
 }
 EOT
 
-  echo "c = get_config()" > ~/.jupyter/jupyter_notebook_config.py
-  echo "c.NotebookApp.use_jupyterlab = True" >> ~/.jupyter/jupyter_notebook_config.py
   [ $? -eq 0 ] && echo "Jupyter Lab setup complete." || { echo "Jupyter Lab setup failed."; exit 1; }
 }
 
