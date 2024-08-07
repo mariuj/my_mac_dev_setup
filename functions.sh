@@ -65,18 +65,27 @@ setup_pipx() {
 }
 
 setup_vim() {
+  # Copy / paste the rc file
   local script_dir=$(dirname "$0")
   local vimrc_path="${HOME}/.vimrc"
+  local repo_vimrc="${script_dir}/vimrc" 
   echo "Setting up Vim..."
   [ -f "$vimrc_path" ] && mv "$vimrc_path" "${vimrc_path}.bak"
-  cp "$script_dir/.vimrc" "$vimrc_path"
-  [ $? -eq 0 ] && echo "Vim configuration copied." || { echo "Vim configuration copy failed."; exit 1; }
+  if [ -f "$repo_vimrc" ]; then
+    cp "$repo_vimrc" "$vimrc_path"
+    [ $? -eq 0 ] && echo "Vim configuration copied." || { echo "Vim configuration copy failed."; exit 1; }
+  else
+    echo "Vim configuration file from repo not found."
+    exit 1
+  fi
 
+  # Install vim plug
   if [ ! -f "${HOME}/.vim/autoload/plug.vim" ]; then
     echo "Installing vim-plug..."
     curl -fLo "${HOME}/.vim/autoload/plug.vim" --create-dirs "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
   fi
 
+  # Install all the plugins from the rc
   echo "Installing Vim plugins..."
   vim +PlugInstall +qall
   [ $? -eq 0 ] && echo "Vim setup complete." || { echo "Vim setup failed."; exit 1; }

@@ -20,13 +20,6 @@ get_functions() {
   functions_list=($(awk '/^[[:blank:]]*function[[:blank:]]+|^[[:blank:]]*[a-zA-Z_][a-zA-Z0-9_]*[[:blank:]]*\(\)[[:blank:]]*{/{gsub(/\(\).*/, "", $1); print $1}' "$script_file"))
 }
 
-print_function_order() {
-  echo "The following functions will be executed in order:"
-  for function in "${functions_list[@]}"; do
-    echo " - $function"
-  done
-}
-
 run_function() {
   local function_name=$1
   if declare -F "$function_name" > /dev/null; then
@@ -68,7 +61,6 @@ exclude_function() {
 
 if ! [[ "$@" =~ "-h" ]]; then
   get_functions
-  print_function_order
   echo "WARNING! this script assumes a clean image!"
   echo "Do not run if this is not a clean image!"
   echo "Press enter to continue..."
