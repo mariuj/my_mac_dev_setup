@@ -1,5 +1,6 @@
 cask "iterm2"
 cask "font-powerline-symbols"
+cask "nikitabobko/tap/aerospace"
 
 brew "git"
 brew "vim"
@@ -8,4 +9,3 @@ brew "zsh-syntax-highlighting"
 brew "pyenv"
 brew "pyenv-virtualenv"
 brew "pipx"
-

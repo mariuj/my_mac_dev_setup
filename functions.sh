@@ -11,7 +11,20 @@ install_homebrew() {
 brew_install() {
   echo "Installing packages from Brewfile..."
   brew bundle --file=Brewfile
-  [ $? -eq 0 ] && echo "Packages installed." || { echo "Package install failed."; exit 1; }
+  [ $? -eq 0 ] && echo "Brew packages installed." || { echo "Brew packages install failed."; exit 1; }
+}
+
+pipx_install() {
+  export PATH=$PATH:~/.local/bin
+  pipx ensurepath
+  pipx install mypy --include-deps
+  pipx install ruff --include-deps
+  pipx install isort --include-deps
+  pipx install pyright --include-deps
+  pipx install jupyterlab --include_deps
+  echo 'export PATH=$PATH:$HOME/.local/bin' >> ~/.zshrc
+
+  [ $? -eq 0 ] && echo "pipx packages instaled." || { echo "pipx packages install failed."; exit 1; }
 }
 
 generate_ssh_key() {
@@ -52,18 +65,6 @@ setup_pyenv() {
   [ $? -eq 0 ] && echo "pyenv setup complete." || { echo "pyenv setup failed."; exit 1; }
 }
 
-setup_pipx() {
-  export PATH=$PATH:~/.local/bin
-  pipx ensurepath
-  pipx install mypy --include-deps
-  pipx install ruff --include-deps
-  pipx install isort --include-deps
-  pipx install pyright --include-deps
-  echo 'export PATH=$PATH:$HOME/.local/bin' >> ~/.zshrc
-
-  [ $? -eq 0 ] && echo "pipx setup complete." || { echo "pipx setup failed."; exit 1; }
-}
-
 setup_vim() {
   # Copy / paste the rc file
   local script_dir=$(dirname "$0")
@@ -91,10 +92,13 @@ setup_vim() {
   [ $? -eq 0 ] && echo "Vim setup complete." || { echo "Vim setup failed."; exit 1; }
 }
 
+setup_aerospace() {
+  cp aerospace.toml ~/.aerospace.toml
+  [ $? -eq 0 ] && echo "Aerospace setup complete." || { echo "Aerospace setup failed."; exit 1; }
+}
+
 setup_jupyter() {
   echo "Setting up Jupyter Lab..."
-  pipx install jupyterlab
-
   # Installing JupyterLab extensions
   pipx inject jupyterlab jupyterlab-git
   jupyter labextension install @jupyterlab/git
@@ -167,6 +171,5 @@ setup_plugins() {
 }
 
 final_steps() {
-  # Used to add finals steps in the end if needed..
   chsh -s "$(which zsh)"
 }
